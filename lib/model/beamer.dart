@@ -6,6 +6,7 @@ class Beamer {
   double energy;
   String name;
   double maxDamage;
+  double maxEnergy;
   int ticks;
   Reactor? reactor;
 
@@ -15,6 +16,7 @@ class Beamer {
     required this.energy,
     required this.name,
     this.maxDamage = 0,
+    this.maxEnergy = 0,
     this.ticks = 0,
     this.reactor,
   });

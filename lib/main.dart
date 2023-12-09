@@ -87,6 +87,13 @@ class _MyHomePageState extends State<MyHomePage> {
                           beamer.reactor?.name ?? '',
                           style: const TextStyle(fontSize: 16),
                         ),
+                        const SizedBox(width: 8),
+                        Text('${(beamer.maxEnergy / (beamer.reactor?.energy ?? 0) * 100).round().toStringAsFixed(0)}%',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white24,
+                            )),
                         const Spacer(),
                         Text(
                           'Тиков: ${beamer.ticks}',
@@ -187,10 +194,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
       for (var reactor in reactors) {
         for (var beamer in greenBeamers) {
-          double damage = getDamage(reactor, beamer).$1;
-          int ticks = getDamage(reactor, beamer).$2;
+          var (x, y, z) = getDamage(reactor, beamer);
+          double damage = x;
+          double energy = y;
+          int ticks = z;
           if (damage > beamer.maxDamage) {
             beamer.maxDamage = damage;
+            beamer.maxEnergy = energy;
             beamer.reactor = reactor;
             beamer.ticks = ticks;
           }
@@ -217,13 +227,14 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-(double, int) getDamage(Reactor reactor, Beamer beamer) {
+(double, double, int) getDamage(Reactor reactor, Beamer beamer) {
   double energy = beamer.energy;
   double damage = beamer.damage;
   for (var i = 1; energy < reactor.energy; i++) {
+    double maxEnergy = energy;
     energy = energy + energy * 2;
     if (reactor.energy < energy) {
-      return (damage, i);
+      return (damage, maxEnergy, i);
     } else {
       if (i <= 3) {
         damage = damage + damage * 2;
@@ -233,7 +244,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     print('energy $energy');
   }
-  return (damage, 1);
+  return (damage, 0, 1);
 }
 
 //double getDamage(Reactor reactor, Beamer beamer) {
