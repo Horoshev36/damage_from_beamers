@@ -46,11 +46,8 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(top: 8.0),
-        child: Center(
-          child: buildText(context),
-        ),
+      body: Center(
+        child: buildText(context),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _calculate,
@@ -84,9 +81,18 @@ class _MyHomePageState extends State<MyHomePage> {
                                   ? Colors.blue
                                   : Colors.purple),
                     ),
-                    Text(
-                      beamer.reactor?.name ?? '',
-                      style: const TextStyle(fontSize: 16),
+                    Row(
+                      children: [
+                        Text(
+                          beamer.reactor?.name ?? '',
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                        const Spacer(),
+                        Text(
+                          'Тиков: ${beamer.ticks}',
+                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                      ],
                     ),
                     Row(
                       children: [
@@ -181,10 +187,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
       for (var reactor in reactors) {
         for (var beamer in greenBeamers) {
-          double damage = getDamage(reactor, beamer);
+          double damage = getDamage(reactor, beamer).$1;
+          int ticks = getDamage(reactor, beamer).$2;
           if (damage > beamer.maxDamage) {
             beamer.maxDamage = damage;
             beamer.reactor = reactor;
+            beamer.ticks = ticks;
           }
           if (damage > maxDamage) {
             maxDamage = damage;
@@ -209,13 +217,13 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-double getDamage(Reactor reactor, Beamer beamer) {
+(double, int) getDamage(Reactor reactor, Beamer beamer) {
   double energy = beamer.energy;
   double damage = beamer.damage;
   for (var i = 1; energy < reactor.energy; i++) {
     energy = energy + energy * 2;
     if (reactor.energy < energy) {
-      return damage;
+      return (damage, i);
     } else {
       if (i <= 3) {
         damage = damage + damage * 2;
@@ -225,7 +233,7 @@ double getDamage(Reactor reactor, Beamer beamer) {
     }
     print('energy $energy');
   }
-  return damage;
+  return (damage, 1);
 }
 
 //double getDamage(Reactor reactor, Beamer beamer) {
