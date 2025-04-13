@@ -134,25 +134,28 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _calculate() {
     beamersList = [];
+    int currentLayer = 20;
+    double differenceOfColors = 13.043682;
+    double differenceOfLayers = 24.812926;
     List<Reactor> reactors = [
-      Reactor(energy: 185867.953, name: 'Реактор'),
-      Reactor(energy: 157272.891, name: 'Реактор "Пульс"'),
-      Reactor(energy: 128677.82, name: 'Реактор "Свеча"'),
-      Reactor(energy: 314545.781, name: 'Реактор "Звезда"'),
-      Reactor(energy: 285950.688, name: 'Реактор "Атлет"'),
-      Reactor(energy: 142975.344, name: 'Реактор "Малыш"'),
-      Reactor(energy: 214463.031, name: 'Реактор "Котёл"'),
+      Reactor(energy: 581582, name: 'Реактор'),
+      Reactor(energy: 492107, name: 'Реактор "Пульс"'),
+      Reactor(energy: 402633, name: 'Реактор "Свеча"'),
+      Reactor(energy: 984215, name: 'Реактор "Звезда"'),
+      Reactor(energy: 894741, name: 'Реактор "Атлет"'),
+      Reactor(energy: 447370, name: 'Реактор "Малыш"'),
+      Reactor(energy: 671056, name: 'Реактор "Котёл"'),
     ];
 
     List<Beamer> beamers = [
-      Beamer(multiplier: 2, damage: 30991.508, energy: 11531.724, name: '#Green Лучемёт'),
-      Beamer(multiplier: 2.25, damage: 36036.637, energy: 12684.896, name: '#Green Лучемёт "Резак"'),
-      Beamer(multiplier: 2, damage: 24144.547, energy: 14270.508, name: '#Green Лучемёт "Сверло"'),
-      Beamer(multiplier: 2, damage: 31135.653, energy: 13838.068, name: '#Green Лучемёт "Пика"'),
-      Beamer(multiplier: 2.25, damage: 38919.566, energy: 15279.534, name: '#Green Лучемёт "Смерч"'),
-      Beamer(multiplier: 3, damage: 51892.758, energy: 17297.586, name: '#Green Лучемёт "Игла"'),
-      Beamer(multiplier: 2, damage: 19459.783, energy: 10090.258, name: '#Green Лучемёт "Колос"'),
-      Beamer(multiplier: 2, damage: 34523.098, energy: 9225.379, name: '#Green Лучемёт "Стилет"'),
+      Beamer(multiplier: 2, damage: 96972, energy: 36082, name: '#Green Лучемёт'),
+      Beamer(multiplier: 2.25, damage: 112758, energy: 39691, name: '#Green Лучемёт "Резак"'),
+      Beamer(multiplier: 2, damage: 75548, energy: 44652, name: '#Green Лучемёт "Сверло"'),
+      Beamer(multiplier: 2, damage: 97423, energy: 43299, name: '#Green Лучемёт "Пика"'),
+      Beamer(multiplier: 2.25, damage: 121779, energy: 47809, name: '#Green Лучемёт "Смерч"'),
+      Beamer(multiplier: 3, damage: 162372, energy: 54124, name: '#Green Лучемёт "Игла"'),
+      Beamer(multiplier: 1.33, damage: 60889, energy: 31572, name: '#Green Лучемёт "Колос"'),
+      Beamer(multiplier: 2, damage: 108022, energy: 28866, name: '#Green Лучемёт "Стилет"'),
     ];
 
     double maxDamage = 0.0;
@@ -163,28 +166,67 @@ class _MyHomePageState extends State<MyHomePage> {
     List<Beamer> purpleBeamers = [];
     setState(() {
       for (var item in beamers) {
+        //prev
+        greenBeamers.add(Beamer(
+          damage: item.damage / 100 * (100 - differenceOfLayers),
+          energy: item.energy / 100 * (100 - differenceOfLayers),
+          name: (currentLayer - 1).toString() + ' ' + item.name,
+          multiplier: item.multiplier,
+        ));
+        //current
         greenBeamers.add(Beamer(
           damage: item.damage,
           energy: item.energy,
-          name: item.name,
+          name: currentLayer.toString() + ' ' + item.name,
           multiplier: item.multiplier,
         ));
-        item.damage = item.damage / 100 * 115;
-        item.energy = item.energy / 100 * 115;
+        //next
+        greenBeamers.add(Beamer(
+          damage: item.damage / 100 * (100 + differenceOfLayers),
+          energy: item.energy / 100 * (100 + differenceOfLayers),
+          name: (currentLayer + 1).toString() + ' ' + item.name,
+          multiplier: item.multiplier,
+        ));
+        item.damage = item.damage / 100 * (100 + differenceOfColors);
+        item.energy = item.energy / 100 * (100 + differenceOfColors);
         item.name = item.name.replaceAll('Green', 'Blue');
+        blueBeamers.add(Beamer(
+          damage: item.damage / 100 * (100 - differenceOfLayers),
+          energy: item.energy / 100 * (100 - differenceOfLayers),
+          name: (currentLayer - 1).toString() + ' ' + item.name,
+          multiplier: item.multiplier,
+        ));
         blueBeamers.add(Beamer(
           damage: item.damage,
           energy: item.energy,
-          name: item.name,
+          name: currentLayer.toString() + ' ' + item.name,
           multiplier: item.multiplier,
         ));
-        item.damage = item.damage / 100 * 115;
-        item.energy = item.energy / 100 * 115;
+        blueBeamers.add(Beamer(
+          damage: item.damage,
+          energy: item.energy,
+          name: (currentLayer + 1).toString() + ' ' + item.name,
+          multiplier: item.multiplier,
+        ));
+        item.damage = item.damage / 100 * (100 + differenceOfColors);
+        item.energy = item.energy / 100 * (100 + differenceOfColors);
         item.name = item.name.replaceAll('Blue', 'Purple');
+        purpleBeamers.add(Beamer(
+          damage: item.damage / 100 * (100 - differenceOfLayers),
+          energy: item.energy / 100 * (100 - differenceOfLayers),
+          name: (currentLayer - 1).toString() + ' ' + item.name,
+          multiplier: item.multiplier,
+        ));
         purpleBeamers.add(Beamer(
           damage: item.damage,
           energy: item.energy,
-          name: item.name,
+          name: currentLayer.toString() + ' ' + item.name,
+          multiplier: item.multiplier,
+        ));
+        purpleBeamers.add(Beamer(
+          damage: item.damage / 100 * (100 + differenceOfLayers),
+          energy: item.energy / 100 * (100 + differenceOfLayers),
+          name: (currentLayer + 1).toString() + ' ' + item.name,
           multiplier: item.multiplier,
         ));
       }
@@ -228,35 +270,61 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 (double, double, int) getDamage(Reactor reactor, Beamer beamer) {
+  int ticks = 0;
   double energy = beamer.energy;
   double damage = beamer.damage;
-  for (var i = 1; energy < reactor.energy; i++) {
-    double maxEnergy = energy;
-    energy = energy + energy * 2;
-    if (reactor.energy < energy) {
-      return (damage, maxEnergy, i);
+  double maxDamage = 0;
+  double maxEnergy = 0;
+  for (var i = 1; maxEnergy < reactor.energy; i++) {
+    if (i == 1) {
+      damage = damage;
+      energy = energy;
+    } else if (i == 2) {
+      damage = damage * beamer.multiplier;
+      energy = energy;
     } else {
-      if (i <= 3) {
-        damage = damage + damage * 2;
+      if (i < 5) {
+        damage = damage + beamer.damage;
       }
-
-      print('damage $damage ${beamer.name}');
+      energy = maxEnergy + beamer.energy * beamer.multiplier;
     }
-    print('energy $energy');
+
+    maxDamage = maxDamage + damage;
+    maxEnergy = maxEnergy + energy;
+    print('damage ${damage - beamer.damage}');
+    print('energy ${energy - beamer.energy}');
+    ticks = i;
   }
-  return (damage, 0, 1);
+  print(maxDamage);
+  return (maxDamage, energy - beamer.energy, ticks);
 }
 
-//double getDamage(Reactor reactor, Beamer beamer) {
-//  double energy = beamer.energy;
-//  double damage = beamer.damage;
-//  for (var i = 1; energy < reactor.energy; i++) {
-//    if (reactor.energy < energy) {
-//      return damage;
-//    } else {
-//      damage = damage * damage;
+//double getDamage(double reactor, double beamer, double beamerD) {
+//  double energy = beamer;
+//  double damage = beamerD;
+//  double maxDamage = 0;
+//  double maxEnergy = 0;
+//  for (var i = 1; maxEnergy < reactor; i++) {
+//    if (i==1){
+//      damage = damage;
+//      energy = energy;
+//    }else if (i==2){
+//      damage = damage*3;
+//      energy = energy;
+//    }else{
+//      if(i<5) {
+//        damage = damage + beamerD;
+//      }
+//      energy = maxEnergy + beamer*3;
 //    }
-//    energy = energy + energy;
+//
+//    maxDamage = maxDamage + damage-beamerD;
+//    maxEnergy = maxEnergy + energy - beamer;
+//    print('damage ${damage-beamerD}');
+//    print('energy ${energy-beamer}');
+//    print('$i');
 //  }
-//  return 0;
+//  print(maxDamage);
+//  print(energy-beamer);
+//  return maxDamage;
 //}
